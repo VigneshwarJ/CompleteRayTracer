@@ -152,6 +152,7 @@
     <ClCompile Include="..\dependencies\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="MainApp.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -162,7 +163,9 @@
     <ClInclude Include="..\dependencies\include\imgui\imgui_internal.h" />
     <ClInclude Include="..\dependencies\include\imgui\imstb_textedit.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="ImguiFrame.h" />
     <ClInclude Include="MainApp.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

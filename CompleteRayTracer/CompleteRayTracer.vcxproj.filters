@@ -16,17 +16,23 @@
     <Filter Include="Source Files\imgui">
       <UniqueIdentifier>{bfeb51c9-1930-4a7e-9ac7-1498704ef80a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\imgui">
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{3284a678-a53d-4c95-8c57-7a8df709d14d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Vendor">
+      <UniqueIdentifier>{02aee2e0-280b-4bc8-84d6-41d649d90ef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Vendor\imgui">
       <UniqueIdentifier>{6a9c4bfa-f7f0-43d6-9748-bf284edee197}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\stb_image">
+    <Filter Include="Header Files\Vendor\stb_image">
       <UniqueIdentifier>{d03b88ff-0fd7-478e-9380-954c7e1fc959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{c047e78d-7e7f-4894-953a-417b857cc2e9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MainApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\dependencies\include\imgui\imgui.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
@@ -48,39 +54,51 @@
     <ClCompile Include="..\dependencies\include\imgui\imgui_widgets.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Image.cpp">
+    <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="Image.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="MainApp.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\include\imgui\imconfig.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\imgui\imgui.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\imgui\imgui_impl_glfw.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\imgui\imgui_internal.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\imgui\imgui_impl_vulkan.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\include\imgui\imstb_textedit.h">
-      <Filter>Header Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
-      <Filter>Header Files\stb_image</Filter>
+      <Filter>Header Files\Vendor\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiFrame.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="MainApp.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
