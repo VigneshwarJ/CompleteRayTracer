@@ -20,12 +20,20 @@ public:
 			glm::vec3(0, 1, 0),
 			1));
 		std::vector<glm::vec3> floorVertices{ 
-			glm::vec3(0.85f, -0.5f, 1), 
-			glm::vec3(+1, -0.5f, 10), 
-			glm::vec3(-2, -0.5f, 10), 
-			glm::vec3(-2, -0.5f, 1) };
-		shapes.push_back(std::make_unique<Sphere>(glm::vec3(-0.121f, 1.5014f, -4.724f), 1.0f, &materials[0]));
-		shapes.push_back(std::make_unique<Sphere>(glm::vec3(1.25f, 0.92f, -3.94f), .75f, &materials[1]));
+			glm::vec3(1, -0.5f, -10), 
+			glm::vec3(+1, -0.5f, 100), 
+			glm::vec3(-10, -0.5f, 100), 
+			glm::vec3(-10, -0.5f, -10) };
+		shapes.push_back(
+			std::make_unique<Sphere>(
+			glm::vec3(-0.121f, 1.5014f, -4.724f), 
+			1.0f, 
+			&materials[0]));
+		shapes.push_back(
+			std::make_unique<Sphere>(
+			glm::vec3(-1.5f, 0.92f, -3.94f), 
+			.75f,
+			&materials[1]));
 		shapes.push_back(std::make_unique<Plane>(floorVertices,&materials[2]));
 	}
 
@@ -43,8 +51,11 @@ public:
 		m_ViewportWidth = ImGui::GetContentRegionAvail().x;
 		m_ViewportHeight = ImGui::GetContentRegionAvail().y;
 		auto image = renderer.GetFinalImage();
+
 		if (image)
-			ImGui::Image(image->GetDescriptorSet(), { (float)image->GetWidth(), (float)image->GetHeight() });
+			ImGui::Image(image->GetDescriptorSet(), 
+				{ (float)image->GetWidth(), (float)image->GetHeight() },
+				{1,1},{0,0});
 
 		ImGui::End();
 		//ImGui::PopStyleVar();

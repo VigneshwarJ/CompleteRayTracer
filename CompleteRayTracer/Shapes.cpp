@@ -47,22 +47,21 @@ Plane::Plane(std::vector<glm::vec3> v_list, Material* mat) :
 
 float Plane::OnIntersect(const Ray& ray) const
 {
-	glm::vec3 origin = ray.Origin - Position;
+	//glm::vec3 origin = ray.Origin - glm::vec3(Vertices[3].x * .5 + Vertices[0].x * .5, Vertices[2].y * .5 + Vertices[1].y * .5, Vertices[1].z * .5 + Vertices[2].z * .5);
+	glm::vec3 origin = ray.Origin - Vertices[0];
+
+
 	float denom = glm::dot(Normal, ray.Direction);
 	if (denom !=0)
 	{
 		
-		float num = -glm::dot(Normal, ray.Origin) -glm::dot(Normal, ray.Origin - Vertices[0]);
+		float num = -1 * (glm::dot(Normal, origin) + F);
 		float omega = num / denom;
+
 		if (omega > 0.0001f)
 		{
-
-		return omega;
-		}
-		/*if (omega > 0.0001f)
-		{
 			
-			glm::vec3 intersection =  (ray.Direction * omega);
+			glm::vec3 intersection =  origin + (ray.Direction * omega);
 			glm::vec3 A = glm::normalize( Vertices[Vertices.size() - 1] - intersection);
 			glm::vec3 B = glm::normalize(Vertices[0] - intersection);
 			float totalAngle = glm::degrees(acos(glm::dot(A, B)));
@@ -72,13 +71,13 @@ float Plane::OnIntersect(const Ray& ray) const
 				B = glm::normalize( Vertices[i + 1] - intersection);
 				totalAngle += glm::degrees(acos(glm::dot(A, B)));
 			}
-			std::cout << totalAngle<<"\n";
+			//std::cout << totalAngle<<"\n";
 			if (totalAngle > 359.5f && totalAngle < 360.5f)
 			{
-				std::cout << "here\n";
+				//std::cout << "here\n";
 				return omega;
 			}
-		}*/
+		}
 	}
 	return -1.0f;
 }
