@@ -150,9 +150,12 @@
     <ClCompile Include="..\dependencies\include\imgui\imgui_impl_vulkan.cpp" />
     <ClCompile Include="..\dependencies\include\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\dependencies\include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="MainApp.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -162,10 +165,14 @@
     <ClInclude Include="..\dependencies\include\imgui\imgui_impl_vulkan.h" />
     <ClInclude Include="..\dependencies\include\imgui\imgui_internal.h" />
     <ClInclude Include="..\dependencies\include\imgui\imstb_textedit.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImguiFrame.h" />
     <ClInclude Include="MainApp.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Shapes.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
