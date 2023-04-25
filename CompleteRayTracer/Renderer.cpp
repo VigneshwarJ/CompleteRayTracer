@@ -30,45 +30,67 @@ void Renderer::OnResize(uint32_t width, uint32_t height)
 
 	delete[] m_ImageData;
 	m_ImageData = new uint32_t[width * height];
+	delete[] m_AccumulationData;
+	m_AccumulationData = new glm::vec4[width * height];
 }
 
-void Renderer::Render(const std::vector<std::unique_ptr<Shape>>& shapes, const Camera& camera)
+void Renderer::Render(const Scene& scene, const Camera& camera)
 {
-	m_Shapes = &shapes;
+	m_scene = &scene;
 	m_Camera = &camera;
+	if (m_FrameIndex == 1)
+		memset(m_AccumulationData, 0, m_FinalImage->GetWidth() * m_FinalImage->GetHeight() * sizeof(glm::vec4));
 	for (uint32_t y = 0; y < m_FinalImage->GetHeight(); y++)
 	{
 		for (uint32_t x = 0; x < m_FinalImage->GetWidth(); x++)
 		{
 	
-			m_ImageData[x + y * m_FinalImage->GetWidth()] = PerPixel(x,y);
+			//m_ImageData[x + y * m_FinalImage->GetWidth()] = PerPixel(x,y);
+			glm::vec4 color = PerPixel(x, y);
+			m_AccumulationData[x + y * m_FinalImage->GetWidth()] += color;
+
+			glm::vec4 accumulatedColor = m_AccumulationData[x + y * m_FinalImage->GetWidth()];
+			accumulatedColor /= (float)m_FrameIndex;
+
+			accumulatedColor = glm::clamp(accumulatedColor, glm::vec4(0.0f), glm::vec4(1.0f));
+			m_ImageData[x + y * m_FinalImage->GetWidth()] = ConvertToRGBA(accumulatedColor);
 		}
 	}
 
 	m_FinalImage->SetData(m_ImageData);
+
+	if (m_Settings.Accumulate)
+		m_FrameIndex++;
+	else
+		m_FrameIndex = 1;
 }
 
-uint32_t Renderer::PerPixel(uint32_t x,uint32_t y)
+glm::vec4 Renderer::PerPixel(uint32_t x,uint32_t y)
 {
 	Ray ray;
 	ray.Origin = m_Camera->GetPosition();
 	ray.Direction = m_Camera->GetRayDirections()[x + y * m_FinalImage->GetWidth()];
-	const Shape* closestShape = nullptr;
-	float hitDistance = std::numeric_limits<float>::max();
-	for ( auto& shape : *m_Shapes)
-	{
-		float closestT = shape->OnIntersect(ray);
-		if (closestT > 0 && closestT < hitDistance)
-		{
-			hitDistance = closestT;
-			closestShape = shape.get();
-		}
+	return TraceRay(ray);	
+}
 
-	}
-	if (!closestShape)
+glm::vec4 Renderer::TraceRay(const Ray& ray)
+{
+	RayHitInfo info;
+	;
+	if (!m_scene->Intersects(ray,info)) // Ray miss
 	{
-		return ConvertToRGBA(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		return Miss(ray);
 	}
-	return ConvertToRGBA(glm::vec4(closestShape->GetMaterial()->Albedo, 1.0f));
-	
+
+	return ClosestHit(ray, info);
+}
+
+glm::vec4 Renderer::ClosestHit(const Ray& ray, RayHitInfo& info)
+{	
+	return info.hitObject->GetMaterial()->GetColor(info,*m_scene);
+}
+
+glm::vec4 Renderer::Miss(const Ray& ray)
+{
+	return m_scene->SkyColor;
 }

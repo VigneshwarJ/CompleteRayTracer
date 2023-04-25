@@ -35,6 +35,11 @@ float Sphere::OnIntersect(const Ray& ray) const
 	return closestT;
 }
 
+void Sphere::fillNormal(glm::vec3& position, glm::vec3& normal) const
+{
+	normal = glm::normalize(position - Position);
+}
+
 Plane::Plane(std::vector<glm::vec3> v_list, Material* mat) :
 	Vertices(v_list),
 	F(0.0f),
@@ -80,4 +85,34 @@ float Plane::OnIntersect(const Ray& ray) const
 		}
 	}
 	return -1.0f;
+}
+
+void Plane::fillNormal(glm::vec3& position, glm::vec3& normal) const
+{
+
+}
+
+bool Scene::Intersects(Ray ray, RayHitInfo& hitInfo) const
+{
+	bool intersects=false;
+	hitInfo.hitObject = nullptr;
+	float hitDistance = std::numeric_limits<float>::max();
+	for (auto& shape : Shapes)
+	{
+		float closestT = shape->OnIntersect(ray);
+		if (closestT > 0 && closestT < hitDistance)
+		{
+			hitDistance = closestT;
+			hitInfo.hitObject = shape.get();
+			intersects = true;
+			
+		}
+	}
+	if(intersects)
+	{
+		hitInfo.WorldPosition = ray.worldPositionAtT(hitDistance);
+		hitInfo.hitObject->fillNormal(hitInfo.WorldPosition, hitInfo.WorldNormal);
+		hitInfo.HitDistance = hitDistance;
+	}
+	return intersects;
 }

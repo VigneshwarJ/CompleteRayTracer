@@ -31,6 +31,12 @@
     <Filter Include="Header Files\Core">
       <UniqueIdentifier>{c047e78d-7e7f-4894-953a-417b857cc2e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Material">
+      <UniqueIdentifier>{47077642-658e-4ae9-a4f4-13c9d58c760d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Material">
+      <UniqueIdentifier>{1bb7a3dd-c1fd-4717-b0df-4b50e3f5c92d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\dependencies\include\imgui\imgui.cpp">
@@ -69,11 +75,11 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Shapes.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Phong.cpp">
+      <Filter>Source Files\Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +126,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Phong.h">
+      <Filter>Header Files\Material</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

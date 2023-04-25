@@ -153,7 +153,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="MainApp.cpp" />
-    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Phong.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -170,6 +170,7 @@
     <ClInclude Include="ImguiFrame.h" />
     <ClInclude Include="MainApp.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Phong.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shapes.h" />

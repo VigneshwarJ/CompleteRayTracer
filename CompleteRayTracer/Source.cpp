@@ -4,37 +4,56 @@
 #include "Image.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "Phong.h"
 class MainFrame : public ImguiFrame
 {
 
 public:
 	MainFrame() : camera(45.0f, 0.1f, 100.0f)
 	{
-		materials.push_back(Material(glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0),
-			1));
-		materials.push_back(Material(glm::vec3(.5, .5, .5),
-			glm::vec3(0, 1, 0),
-			1));
-		materials.push_back(Material(glm::vec3(1, 0, 0),
-			glm::vec3(0, 1, 0),
-			1));
-		std::vector<glm::vec3> floorVertices{ 
-			glm::vec3(1, -0.5f, -10), 
-			glm::vec3(+1, -0.5f, 100), 
-			glm::vec3(-10, -0.5f, 100), 
+		InitializeLights();
+		InitializeMaterials();
+		InitializeShapes();
+		scene.camera = &camera;
+	}
+	void InitializeLights()
+	{
+		glm::vec3 lightPoint1 = glm::vec3(-0.121f, 2.0f, -3.0f);
+		Light l1{ lightPoint1, glm::vec3(1, 1, 1) , 1.0};
+		scene.pointLights.push_back(l1);
+	}
+	void InitializeShapes()
+	{
+		scene.Shapes.push_back(
+			std::make_unique<Sphere>(
+				glm::vec3(-0.121f, 1.5014f, -4.724f),
+				1.0f,
+				scene.materials[0].get()));
+		scene.Shapes.push_back(
+			std::make_unique<Sphere>(
+				glm::vec3(-1.5f, 0.92f, -3.94f),
+				.75f,
+				scene.materials[1].get()));
+		std::vector<glm::vec3> floorVertices{
+			glm::vec3(1, -0.5f, -10),
+			glm::vec3(+1, -0.5f, 100),
+			glm::vec3(-10, -0.5f, 100),
 			glm::vec3(-10, -0.5f, -10) };
-		shapes.push_back(
-			std::make_unique<Sphere>(
-			glm::vec3(-0.121f, 1.5014f, -4.724f), 
-			1.0f, 
-			&materials[0]));
-		shapes.push_back(
-			std::make_unique<Sphere>(
-			glm::vec3(-1.5f, 0.92f, -3.94f), 
-			.75f,
-			&materials[1]));
-		shapes.push_back(std::make_unique<Plane>(floorVertices,&materials[2]));
+
+
+		scene.Shapes.push_back(std::make_unique<Plane>(floorVertices, scene.materials[2].get()));
+	}
+
+	void InitializeMaterials()
+	{
+		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(0, 1, 0),
+			glm::vec3(0, 1, 0), 0.33f, 0.33f, 0.33f, 0.5f));
+		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(.5, .5, .5),
+			glm::vec3(0, 1, 0),
+			0.33f, 0.33f, 0.33f, 0.5f));
+		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(1, 0, 0),
+			glm::vec3(0, 1, 0),
+			0.33f, 0.33f, 0.33f, 0.5f));
 	}
 
 	void onRender() override {
@@ -58,18 +77,19 @@ public:
 				{1,1},{0,0});
 
 		ImGui::End();
-		//ImGui::PopStyleVar();
 		//Render();
+		//ImGui::PopStyleVar();
+		Render();
 	}
 	void Render() {
 		camera.OnResize(m_ViewportWidth, m_ViewportHeight);
 		renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
-		renderer.Render(shapes,camera);
+		renderer.Render(scene,camera);
 	}
 private:
 	Renderer renderer;
-	std::vector<std::unique_ptr<Shape>> shapes;
-    std::vector<Material> materials;
+	Scene scene;
+    
 	Camera camera;
 	uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 	uint32_t* m_ImageData = nullptr;
