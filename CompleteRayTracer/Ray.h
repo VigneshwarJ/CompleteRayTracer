@@ -21,5 +21,6 @@ struct RayHitInfo
 	glm::vec3 WorldPosition;
 	glm::vec3 WorldNormal;
 	std::vector<glm::vec3> Reflection;
+	Ray ray;
 	const Shape* hitObject;
 };

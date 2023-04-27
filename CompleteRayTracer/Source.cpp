@@ -18,7 +18,8 @@ public:
 	}
 	void InitializeLights()
 	{
-		glm::vec3 lightPoint1 = glm::vec3(-0.121f, 2.0f, -3.0f);
+		glm::vec3 lightPoint1 = glm::vec3(-0.121f, 7.0f, -5.0f);
+
 		Light l1{ lightPoint1, glm::vec3(1, 1, 1) , 1.0};
 		scene.pointLights.push_back(l1);
 	}
@@ -47,13 +48,13 @@ public:
 	void InitializeMaterials()
 	{
 		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0), 0.33f, 0.33f, 0.33f, 0.5f));
+			glm::vec3(1, 1, 1), 0.33f, 0.33f, 0.33f, 20.5f));
 		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(.5, .5, .5),
-			glm::vec3(0, 1, 0),
-			0.33f, 0.33f, 0.33f, 0.5f));
+			glm::vec3(1, 1, 1),
+			0.33f, 0.33f, 0.33f, 20.5f));
 		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(1, 0, 0),
-			glm::vec3(0, 1, 0),
-			0.33f, 0.33f, 0.33f, 0.5f));
+			glm::vec3(1, 1, 1),
+			0.33f, 0.33f, 0.33f, 20.5f));
 	}
 
 	void onRender() override {
@@ -65,6 +66,7 @@ public:
 		{
 			Render();
 		}
+		ImGui::SliderFloat3("light position", color,-100,100);
 		ImGui::End();
 		ImGui::Begin("Viewport");
 		m_ViewportWidth = ImGui::GetContentRegionAvail().x;
@@ -82,6 +84,9 @@ public:
 		Render();
 	}
 	void Render() {
+		scene.pointLights[0].Position.x = color[0];
+		scene.pointLights[0].Position.y = color[1];
+		scene.pointLights[0].Position.z = color[2];
 		camera.OnResize(m_ViewportWidth, m_ViewportHeight);
 		renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
 		renderer.Render(scene,camera);
@@ -89,7 +94,7 @@ public:
 private:
 	Renderer renderer;
 	Scene scene;
-    
+	float color[3] = { 0.121f, 6.0f, -13.0f };;
 	Camera camera;
 	uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 	uint32_t* m_ImageData = nullptr;

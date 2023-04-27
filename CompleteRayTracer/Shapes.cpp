@@ -31,7 +31,8 @@ float Sphere::OnIntersect(const Ray& ray) const
 	// (-b +- sqrt(discriminant)) / 2a
 
 	// float t0 = (-b + glm::sqrt(discriminant)) / (2.0f * a); // Second hit distance (currently unused)
-	float closestT = (-b - glm::sqrt(discriminant)) / (2.0f * a);
+	float neg = ( - b - glm::sqrt(discriminant)) / (2.0f * a);
+	float closestT = (-b + glm::sqrt(discriminant)) / (2.0f * a) < neg ? (-b + glm::sqrt(discriminant)) / (2.0f * a):neg;
 	return closestT;
 }
 
@@ -89,7 +90,7 @@ float Plane::OnIntersect(const Ray& ray) const
 
 void Plane::fillNormal(glm::vec3& position, glm::vec3& normal) const
 {
-
+	normal = -Normal;
 }
 
 bool Scene::Intersects(Ray ray, RayHitInfo& hitInfo) const
@@ -114,5 +115,6 @@ bool Scene::Intersects(Ray ray, RayHitInfo& hitInfo) const
 		hitInfo.hitObject->fillNormal(hitInfo.WorldPosition, hitInfo.WorldNormal);
 		hitInfo.HitDistance = hitDistance;
 	}
+	hitInfo.ray = ray;
 	return intersects;
 }

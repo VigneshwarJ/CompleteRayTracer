@@ -19,42 +19,48 @@ Phong::Phong(glm::vec3 objectColor,
 
 glm::vec4 Phong::GetColor(RayHitInfo record,const Scene& scene)
 {
-	glm::vec3 diffuseColor;
-	glm::vec3 specularColor;
+	glm::vec3 diffuseColor = { 0,0,0 };
+	glm::vec3 specularColor = { 0,0,0 };
+	glm::vec3 ambientColor = C_o * k_a;;
 	glm::vec3 lightDir;
 	glm::vec3 viewDir;
+	glm::vec3 shadowPosition;
+	glm::vec3 halfway;
+	float spec = 0;
 	float NdotL =0;
+	float diffuse = 0.0f;
+	viewDir = -record.ray.Direction;
+	//viewDir =  glm::normalize(scene.camera->GetDirection());
 	for (int i = 0; i < scene.pointLights.size(); i++) {
 		const Light& pointLight = scene.pointLights[i];
 
 		glm::vec3 normal = record.WorldNormal;
 		lightDir = glm::normalize( pointLight.Position - record.WorldPosition);
-		 viewDir = glm::normalize(scene.camera->GetPosition() - record.WorldPosition);
 
 		// blinn phong
-		glm::vec3 halfway = glm::normalize(lightDir + viewDir);
-
+		//halfway = glm::reflect(-lightDir, -normal);
+		halfway = glm::reflect(-lightDir , -normal);
+	
 		// blinn
 
+		glm::vec3 shadowRayorig = record.WorldPosition + (lightDir * 1.0f);
+		Ray shadowRay{ shadowRayorig, lightDir };
+		RayHitInfo shadowRec;
 
-		float distance = (pointLight.Position - record.WorldPosition).length();
+		if (scene.Intersects(shadowRay, shadowRec)) {
 
-		//glm::vec3 shadowRayorig = record.WorldPosition + (lightDir * 0.001f);
-		//Ray shadowRay{ shadowRayorig, lightDir };
-		//RayHitInfo shadowRec;
+			continue;
+		}
 
-		//if (scene.Intersects(shadowRay, shadowRec)) {
-		//	continue;
-		//}
 		// calculate diffuse lighting 
 		NdotL = glm::max(glm::dot(normal, lightDir), 0.0f);
-		float diffuse = /*pointLight.intensity **/ NdotL;
-		diffuseColor += (C_o * pointLight.color * diffuse * k_d);
-		//specularColor = C_o * pointLight.color * diffuse;
+		 diffuse = pointLight.intensity * NdotL;
+		 diffuseColor += (C_o * pointLight.color * diffuse * k_d);
 		//calculate specular highlight
-		float spec = pow(glm::max(glm::dot(normal,halfway), 0.0f), k_e);
-	    specularColor = specularColor + (pointLight.color * pointLight.intensity * spec * k_s);
+		spec = glm::pow(glm::max(glm::dot(viewDir, halfway), 0.f), k_e);
+	    specularColor += (C_s* pointLight.color * pointLight.intensity * spec * k_s);
 	}
 
-	return glm::vec4(diffuseColor+specularColor,1.0);
+	return glm::vec4(  ambientColor+ diffuseColor + specularColor, 1.0);
+	//return glm::vec4(spec);
 }
