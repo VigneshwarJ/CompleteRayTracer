@@ -38,7 +38,7 @@ float Sphere::OnIntersect(const Ray& ray) const
 
 void Sphere::fillNormal(glm::vec3& position, glm::vec3& normal) const
 {
-	normal = glm::normalize(position - Position);
+	normal = glm::normalize(Position - position);
 }
 
 Plane::Plane(std::vector<glm::vec3> v_list, Material* mat) :
@@ -84,13 +84,23 @@ float Plane::OnIntersect(const Ray& ray) const
 				return omega;
 			}
 		}
+
 	}
 	return -1.0f;
+}
+glm::vec2 Plane::getUV(glm::vec3& position) const
+{
+	//glm::vec3 e1 = glm::normalize(glm::cross(Normal, Vertices[0]));
+	glm::vec3 e1 = glm::normalize(glm::vec3{Normal.y, Normal.x, 0});
+	glm::vec3 e2 = glm::cross(Normal, e1);
+	float u = glm::dot(position, e1);
+	float v = glm::dot(position, e2);
+	return { u,v };
 }
 
 void Plane::fillNormal(glm::vec3& position, glm::vec3& normal) const
 {
-	normal = -Normal;
+	normal = Normal;
 }
 
 bool Scene::Intersects(Ray ray, RayHitInfo& hitInfo) const

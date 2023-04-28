@@ -20,6 +20,7 @@ struct RayHitInfo
 	float HitDistance = -1;
 	glm::vec3 WorldPosition;
 	glm::vec3 WorldNormal;
+	glm::vec2 uv;
 	std::vector<glm::vec3> Reflection;
 	Ray ray;
 	const Shape* hitObject;

@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "Phong.h"
+#include "CheckerBoardTexture.h"
 class MainFrame : public ImguiFrame
 {
 
@@ -15,6 +16,7 @@ public:
 		InitializeMaterials();
 		InitializeShapes();
 		scene.camera = &camera;
+		scene.SkyColor = { 0,0,.5f,1 };
 	}
 	void InitializeLights()
 	{
@@ -32,7 +34,7 @@ public:
 				scene.materials[0].get()));
 		scene.Shapes.push_back(
 			std::make_unique<Sphere>(
-				glm::vec3(-1.5f, 0.92f, -3.94f),
+				glm::vec3(-1.5f, 0.92f, -4.24f),
 				.75f,
 				scene.materials[1].get()));
 		std::vector<glm::vec3> floorVertices{
@@ -52,7 +54,8 @@ public:
 		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(.5, .5, .5),
 			glm::vec3(1, 1, 1),
 			0.33f, 0.33f, 0.33f, 20.5f));
-		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(1, 0, 0),
+		scene.textures.push_back(std::make_unique<CheckerBoardTexture>(glm::vec3(1, 0, 0), glm::vec3(1, 1, 0), 4.2));
+		scene.materials.push_back(std::make_unique<Phong>(scene.textures[0].get(),
 			glm::vec3(1, 1, 1),
 			0.33f, 0.33f, 0.33f, 20.5f));
 	}
