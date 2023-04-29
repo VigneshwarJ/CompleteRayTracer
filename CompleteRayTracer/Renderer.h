@@ -24,7 +24,7 @@ public:
 private:
 
 	glm::vec4 PerPixel(uint32_t x, uint32_t y);
-	glm::vec4 TraceRay(const Ray& ray);
+	glm::vec4 TraceRay(const Ray& ray,int depth);
 	glm::vec4 ClosestHit(const Ray& ray,RayHitInfo& info);
 
 	glm::vec4 Miss(const Ray& ray);
@@ -38,4 +38,5 @@ private:
 	const Scene* m_scene = nullptr;
 	const Camera* m_Camera = nullptr;
 	uint32_t m_FrameIndex = 1;
+	uint32_t bounces = 0;
 };

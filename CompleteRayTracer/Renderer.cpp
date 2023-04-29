@@ -36,6 +36,7 @@ void Renderer::OnResize(uint32_t width, uint32_t height)
 
 void Renderer::Render(const Scene& scene, const Camera& camera)
 {
+	bounces = 0;
 	m_scene = &scene;
 	m_Camera = &camera;
 	if (m_FrameIndex == 1)
@@ -70,10 +71,10 @@ glm::vec4 Renderer::PerPixel(uint32_t x,uint32_t y)
 	Ray ray;
 	ray.Origin = m_Camera->GetPosition();
 	ray.Direction = m_Camera->GetRayDirections()[x + y * m_FinalImage->GetWidth()];
-	return TraceRay(ray);	
+	return TraceRay(ray, 10);
 }
 
-glm::vec4 Renderer::TraceRay(const Ray& ray)
+glm::vec4 Renderer::TraceRay(const Ray& ray,int depth)
 {
 	RayHitInfo info;
 	;
@@ -81,13 +82,26 @@ glm::vec4 Renderer::TraceRay(const Ray& ray)
 	{
 		return Miss(ray);
 	}
+	glm::vec4 color = ClosestHit(ray, info);
+	glm::vec4 IndirecTcolor{ 0,0,0,0 };
+	if(bounces < 10)
+	if (info.hitObject->GetMaterial()->ReflectiveConst > 0)
+	{
+		Ray reflected;
+		reflected.Origin = info.WorldPosition + info.WorldNormal*0.001f;
+		reflected.Direction = glm::reflect(ray.Direction, info.WorldNormal);
+		IndirecTcolor = IndirecTcolor + TraceRay(reflected,depth+1) * info.hitObject->GetMaterial()->ReflectiveConst;
+	}
 
-	return ClosestHit(ray, info);
+	return color + IndirecTcolor;
 }
 
 glm::vec4 Renderer::ClosestHit(const Ray& ray, RayHitInfo& info)
 {	
-	return info.hitObject->GetMaterial()->GetColor(info,*m_scene);
+	int bounces = 10;
+	return info.hitObject->GetMaterial()->GetColor(info, *m_scene);
+
+	//return color;
 }
 
 glm::vec4 Renderer::Miss(const Ray& ray)

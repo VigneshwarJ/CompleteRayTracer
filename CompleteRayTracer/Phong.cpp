@@ -2,25 +2,28 @@
 #include "Shapes.h"
 
 Phong::Phong(glm::vec3 objectColor, 
-	glm::vec3 specColor, 
+	glm::vec3 specColor, float reflective, float transperency,
 	float ambient, 
 	float diffuse, 
 	float specular, 
 	float specHighlight):
 	C_o(objectColor),
 	C_s(specColor),
+	k_r(reflective),
 	k_a(ambient),
 	k_d(diffuse),
 	k_s(specular),
 	k_e(specHighlight),
 	texture(nullptr)
 {
-
+	ReflectiveConst = k_r;
+	TransperancyConst = transperency;
 }
 
 Phong::Phong(Texture* texture, glm::vec3 specColor, float ambient, float diffuse, float specular, float specHighlight):
 	texture(texture),
 	C_s(specColor),
+	
 	k_a(ambient),
 	k_d(diffuse),
 	k_s(specular),
