@@ -34,13 +34,13 @@ public:
 				scene.materials[0].get()));
 		scene.Shapes.push_back(
 			std::make_unique<Sphere>(
-				glm::vec3(-1.5f, 0.92f, -4.24f),
+				glm::vec3(-1.5f, 0.92f, -3.24f),
 				.75f,
 				scene.materials[1].get()));
 		std::vector<glm::vec3> floorVertices{
 			glm::vec3(1, -0.5f, -10),
-			glm::vec3(+1, -0.5f, 100),
-			glm::vec3(-10, -0.5f, 100),
+			glm::vec3(+1, -0.5f, 50),
+			glm::vec3(-10, -0.5f, 50),
 			glm::vec3(-10, -0.5f, -10) };
 
 
@@ -49,11 +49,11 @@ public:
 
 	void InitializeMaterials()
 	{
-		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(0, 1, 0),
-			glm::vec3(1, 1, 1), 0.f,1.0f,0.33f, 0.33f, 0.33f, 20.5f));
-		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(.5, .5, .5),
+		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(0, 0,0),
+			glm::vec3(1, 1, 1), 0.1f, 01.2f,0.33f, 0.33f, 0.33f, 64.f));
+		scene.materials.push_back(std::make_unique<Phong>(glm::vec3(0, 0, 0),
 			glm::vec3(1, 1, 1),1.f,0.0f,
-			0.33f, 0.33f, 0.33f, 20.5f));
+			0.33f, 0.33f, 0.33f, 32.f));
 		scene.textures.push_back(std::make_unique<CheckerBoardTexture>(glm::vec3(1, 0, 0), glm::vec3(1, 1, 0), 4.2));
 		scene.materials.push_back(std::make_unique<Phong>(scene.textures[0].get(),
 			glm::vec3(1, 1, 1),

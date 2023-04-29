@@ -51,7 +51,7 @@ void Renderer::Render(const Scene& scene, const Camera& camera)
 			m_AccumulationData[x + y * m_FinalImage->GetWidth()] += color;
 
 			glm::vec4 accumulatedColor = m_AccumulationData[x + y * m_FinalImage->GetWidth()];
-			accumulatedColor /= (float)m_FrameIndex;
+			accumulatedColor /= (float)0.5*m_FrameIndex;
 
 			accumulatedColor = glm::clamp(accumulatedColor, glm::vec4(0.0f), glm::vec4(1.0f));
 			m_ImageData[x + y * m_FinalImage->GetWidth()] = ConvertToRGBA(accumulatedColor);
@@ -84,15 +84,39 @@ glm::vec4 Renderer::TraceRay(const Ray& ray,int depth)
 	}
 	glm::vec4 color = ClosestHit(ray, info);
 	glm::vec4 IndirecTcolor{ 0,0,0,0 };
-	if(bounces < 10)
+	if(bounces < 100)
 	if (info.hitObject->GetMaterial()->ReflectiveConst > 0)
 	{
 		Ray reflected;
 		reflected.Origin = info.WorldPosition + info.WorldNormal*0.001f;
 		reflected.Direction = glm::reflect(ray.Direction, info.WorldNormal);
-		IndirecTcolor = IndirecTcolor + TraceRay(reflected,depth+1) * info.hitObject->GetMaterial()->ReflectiveConst;
+		IndirecTcolor = IndirecTcolor + TraceRay(reflected,depth+1) * info.hitObject->GetMaterial()->ReflectiveConst ;
 	}
+	if (info.hitObject->GetMaterial()->TransperancyConst > 0)
+	{
+		glm::vec3 normal = info.WorldNormal;
+		float refractionIndex = 1.0f / info.hitObject->GetMaterial()->TransperancyConst;
+		if (glm::dot(normal, -ray.Direction) < 0)
+		{
+			normal *= -1;
+			refractionIndex = info.hitObject->GetMaterial()->TransperancyConst / 1.0f;
 
+		}
+		glm::vec3 refractedVector = glm::refract(ray.Direction, normal, refractionIndex);
+
+		if (refractedVector.x == 0 && refractedVector.y == 0 && refractedVector.z == 0)
+		{
+			//total internal reflection
+			refractedVector = glm::reflect(ray.Direction, normal);
+		}
+
+		Ray refractedRay;
+		refractedRay.Origin = info.WorldPosition + 0.01f * refractedVector;
+		refractedRay.Direction = refractedVector;
+
+		glm::vec3 refractedColor = TraceRay(refractedRay, depth + 1);
+		IndirecTcolor += glm::vec4(refractedColor,1.0) * info.hitObject->GetMaterial()->TransperancyConst ;
+	}
 	return color + IndirecTcolor;
 }
 
