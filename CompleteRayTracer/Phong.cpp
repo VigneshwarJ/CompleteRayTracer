@@ -1,5 +1,6 @@
 #include "Phong.h"
 #include "Shapes.h"
+#include "Scene.h"
 
 Phong::Phong(glm::vec3 objectColor, 
 	glm::vec3 specColor, float reflective, float transperency,

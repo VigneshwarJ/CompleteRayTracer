@@ -1,6 +1,8 @@
 #include "Shapes.h"
 #include "Material.h"
 #include <iostream>
+#include "TriangleBoxIntersection.h"
+
 Sphere::Sphere() {
 
 }
@@ -39,6 +41,43 @@ float Sphere::OnIntersect(const Ray& ray) const
 void Sphere::fillNormal(glm::vec3& position, glm::vec3& normal) const
 {
 	normal = glm::normalize(Position - position);
+}
+
+bool Sphere::inVoxel(Voxel v)
+{
+	float d = 0.0f;
+
+	for (size_t i = 0; i < 3; i++)
+	{
+
+	
+
+		float e = Position[i] - v.min[i];
+
+		if (e < 0)
+		{
+			if (e < -Radius)
+			{
+				return false;
+			}
+			d = d + (e * e);
+		}
+		else if ((e = Position[i] - v.max[i]) > 0)
+		{
+			if (e > Radius)
+			{
+				return false;
+			}
+			d = d + (e * e);
+		}
+	}
+
+	if (d > Radius*Radius)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 Plane::Plane(std::vector<glm::vec3> v_list, Material* mat) :
@@ -103,28 +142,72 @@ void Plane::fillNormal(glm::vec3& position, glm::vec3& normal) const
 	normal = Normal;
 }
 
-bool Scene::Intersects(Ray ray, RayHitInfo& hitInfo) const
+Triangle::Triangle(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, Material* mat) :
+	V0(v0),
+	V1(v1),
+	V2(v2),
+	F(0.0f),
+	Position(0.0f)
 {
-	bool intersects=false;
-	hitInfo.hitObject = nullptr;
-	float hitDistance = std::numeric_limits<float>::max();
-	for (auto& shape : Shapes)
-	{
-		float closestT = shape->OnIntersect(ray);
-		if (closestT > 0 && closestT < hitDistance)
-		{
-			hitDistance = closestT;
-			hitInfo.hitObject = shape.get();
-			intersects = true;
-			
-		}
-	}
-	if(intersects)
-	{
-		hitInfo.WorldPosition = ray.worldPositionAtT(hitDistance);
-		hitInfo.hitObject->fillNormal(hitInfo.WorldPosition, hitInfo.WorldNormal);
-		hitInfo.HitDistance = hitDistance;
-	}
-	hitInfo.ray = ray;
-	return intersects;
+	m_Material = mat;
+	Normal = glm::normalize(glm::cross(v1 - v0, v2 -v0));
+	F = -glm::dot(Normal,v0);
+}
+
+void Triangle::fillNormal(glm::vec3& position, glm::vec3& normal) const
+{
+	normal = Normal;
+}
+bool Triangle::inVoxel(Voxel v)
+{
+	glm::vec3 spatialMedian = (v.max + v.min) / 2.0f;
+
+	glm::vec3  boxhalfsize = spatialMedian - v.min;
+
+	return triBoxOverlap(spatialMedian, boxhalfsize, V0, V1, V2);
+
+}
+
+bool Plane::inVoxel(Voxel v)
+{
+	glm::vec3 spatialMedian = (v.max + v.min) / 2.0f;
+
+	glm::vec3  boxhalfsize = spatialMedian - v.min;
+
+	 if (!planeBoxOverlap(Normal, Vertices[0], boxhalfsize))
+		return false; 
+	 return true;
+
+}
+
+float Triangle::OnIntersect(const Ray& ray) const
+{
+
+
+	glm::vec3 e1 = V1 - V0;
+	glm::vec3 e2 = V2 - V0;
+
+	glm::vec3 N = glm::cross(e1, e2);
+	N = glm::normalize(N);
+
+	glm::vec3 pVec = glm::cross(ray.Direction, e2);
+	float det = glm::dot(pVec, e1);
+
+	if (det < 1e-8f) return false;
+
+	float invDet = 1 / det;
+
+	glm::vec3 tvec = ray.Origin - V0;
+	float u = glm::dot(tvec, pVec) * invDet;
+	if (u < 0 || u > 1) return false;
+
+	glm::vec3 qvec = glm::cross(tvec, e1);
+	float v = glm::dot(ray.Direction, qvec) * invDet;
+	if (v < 0 || u + v > 1) return false;
+	float t = glm::dot(e2, qvec) * invDet;
+
+	float w = 1 - u - v;
+
+	return t;
+
 }

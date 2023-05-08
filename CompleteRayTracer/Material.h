@@ -1,7 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "Ray.h"
-class Scene;
+struct Scene;
+
 class Material
 {
 public:

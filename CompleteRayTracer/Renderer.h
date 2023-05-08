@@ -4,9 +4,9 @@
 
 #include <memory>
 #include <glm/glm.hpp>
-#include "Shapes.h"
 #include "Camera.h"
-
+#include "Shapes.h"
+struct Scene;
 class Renderer
 {
 public:
@@ -29,6 +29,10 @@ private:
 
 	glm::vec4 Miss(const Ray& ray);
 
+	void applyWard(float logAverageLuminance, int width, int height, glm::vec4* frameBuffer);
+	void applyReinhard(float logAverageLuminance, int width, int height, glm::vec4* frameBuffer);
+	float calculateLogAverageLuminance(float* luminanceBuffer, int width, int height);
+	void applyAdaptiveLogMapping(float logAverageLuminance, int width, int height, glm::vec3* frameBuffer, float* luminanceBuffer);
 	//glm::vec3 CalculateLighting(const RayHitInfo& record);
 private:
 	Settings m_Settings;
@@ -39,4 +43,6 @@ private:
 	const Camera* m_Camera = nullptr;
 	uint32_t m_FrameIndex = 1;
 	uint32_t bounces = 0;
+	float* luminanceBuffer;
+	float maxLuminance;
 };

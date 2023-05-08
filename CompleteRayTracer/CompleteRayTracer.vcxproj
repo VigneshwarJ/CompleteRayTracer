@@ -153,11 +153,15 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CheckerBoardTexture.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="KdNode.cpp" />
+    <ClCompile Include="KDTree.cpp" />
     <ClCompile Include="MainApp.cpp" />
     <ClCompile Include="Phong.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Voxel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\include\imgui\imconfig.h" />
@@ -170,14 +174,20 @@
     <ClInclude Include="CheckerBoardTexture.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImguiFrame.h" />
+    <ClInclude Include="KdNode.h" />
+    <ClInclude Include="KDTree.h" />
     <ClInclude Include="MainApp.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="ObjReader.h" />
     <ClInclude Include="Phong.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Shapes.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TriangleBoxIntersection.h" />
+    <ClInclude Include="Voxel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
